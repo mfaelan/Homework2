@@ -1,0 +1,89 @@
+Sub Attempt1()
+
+'Set Variables
+Dim Ticker As String
+Dim Ticker_Total As Double
+Dim Last_Row As Integer
+Dim Sum_Table_Row As Integer
+Dim Row As Integer
+Dim Yearly_Change As Double
+Dim Percent_Change As Double
+Dim Opening As Double
+Dim Closing As Double
+Dim Last_Row2 As Integer
+ 
+
+'Assign Variables
+Last_Row = Range("A" & Rows.Count).End(xlUp).Row
+Last_Row2 = Range("J" & Rows.Count).End(xlUp).Row
+Ticker_Total = 0
+Sum_Table_Row = 2
+Opening = Cells(2, 3).Value
+Closing = Cells(2, 6).Value
+
+
+'Entire Workbook
+For Each Worksheet In ThisWorkbook.Sheets
+Worksheet.Activate
+
+
+'Insert column Name for Ticker Symbol and Total
+Range("J1").Value = "Ticker"
+Range("K1").Value = "Yearly Change"
+Range("L1").Value = "Percentage Change"
+Range("M1").Value = "Total Stock Volume"
+
+ 
+'Loop trough <ticker> get Ticker & Total Volume
+For Row = 2 To Last_Row
+    If Cells(Row + 1, 1).Value <> Cells(Row, 1).Value Then
+        Ticker = Cells(Row, 1).Value
+        Ticker_Total = Ticker_Total + (Cells(Row, 7).Value)
+        Range("J" & Sum_Table_Row).Value = Ticker
+        Range("M" & Sum_Table_Row).Value = Ticker_Total
+        Sum_Table_Row = Sum_Table_Row + 1
+        Ticker_Total = 0
+    Else
+        Ticker_Total = Ticker_Total + (Cells(Row, 7).Value)
+    End If
+Next Row
+
+
+'Loop through <date> get yearly change & percent change
+'Reset Variables
+Sum_Table_Row = 2
+Opening = Cells(2, 3).Value
+Closing = Cells(2, 6).Value
+
+For Row = 2 To Last_Row
+    If Cells(Row + 1, 2).Value > Cells(Row, 2).Value Then
+        Closing = Cells(Row, 6).Value
+    Else
+        Closing = Cells(Row, 6).Value
+        Yearly_Change = (Closing - Opening)
+        Percent_Change = (Yearly_Change / Opening)
+        Range("K" & Sum_Table_Row).Value = Yearly_Change
+        Range("L" & Sum_Table_Row).Value = Percent_Change
+        Sum_Table_Row = Sum_Table_Row + 1
+        Opening = Cells(Row, 3).Value
+        Closing = Cells(Row, 6).Value
+    End If
+Next Row
+
+For Row = 2 To Last_Row2
+    If Cells(Row, 11).Value > 0 Then
+        Cells(Row, 11).Interior.ColorIndex = 4
+    Else
+        Cells(Row, 11).Interior.ColorIndex = 3
+    End If
+Next Row
+
+'reset values for new sheet
+Ticker_Total = 0
+Sum_Table_Row = 2
+Opening = Cells(2, 3).Value
+Closing = Cells(2, 6).Value
+
+Next Worksheet
+
+End Sub
