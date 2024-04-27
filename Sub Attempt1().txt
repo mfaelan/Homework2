@@ -3,9 +3,9 @@ Sub Attempt1()
 'Set Variables
 Dim Ticker As String
 Dim Ticker_Total As Double
-Dim Last_Row As Integer
+Dim Last_Row As Long
 Dim Sum_Table_Row As Integer
-Dim Row As Integer
+Dim Row As Long
 Dim Yearly_Change As Double
 Dim Percent_Change As Double
 Dim Opening As Double
@@ -76,6 +76,7 @@ For Row = 2 To Last_Row2
     Else
         Cells(Row, 11).Interior.ColorIndex = 3
     End If
+Range("L" & Row).NumberFormat = "0.00%"
 Next Row
 
 'reset values for new sheet
